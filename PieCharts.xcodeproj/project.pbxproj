@@ -393,7 +393,7 @@
 					};
 					6AFF22B61E16DF520001B0A4 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 37QAPDY2PR;
+						DevelopmentTeam = F529U7DU82;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -671,13 +671,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 37QAPDY2PR;
+				DEVELOPMENT_TEAM = F529U7DU82;
 				INFOPLIST_FILE = "$(SRCROOT)/PieChartsDemo/Supporting files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.schuetz.PieChartsDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -686,13 +686,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 37QAPDY2PR;
+				DEVELOPMENT_TEAM = F529U7DU82;
 				INFOPLIST_FILE = "$(SRCROOT)/PieChartsDemo/Supporting files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.schuetz.PieChartsDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
