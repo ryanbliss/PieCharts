@@ -11,7 +11,12 @@ import Darwin
 
 open class PieSliceLayer: CALayer, CAAnimationDelegate {
     
-    public var color = UIColor.red {
+    public var color1 = UIColor.red {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    public var color2 = UIColor.red {
         didSet {
             setNeedsDisplay()
         }
@@ -40,7 +45,7 @@ open class PieSliceLayer: CALayer, CAAnimationDelegate {
     var strokeWidth: CGFloat = 0
     
     public weak var sliceDelegate: PieSliceDelegate?
- 
+    
     var sliceData: PieSliceData? // Easy identification in delegates
     
     fileprivate var animDelay: Double = 0
@@ -72,9 +77,10 @@ open class PieSliceLayer: CALayer, CAAnimationDelegate {
         }
     }
     
-    public init(color: UIColor, startAngle: CGFloat, endAngle: CGFloat, animDelay: Double, center: CGPoint) {
+    public init(color1: UIColor, color2: UIColor, startAngle: CGFloat, endAngle: CGFloat, animDelay: Double, center: CGPoint) {
         
-        self.color = color
+        self.color1 = color1
+        self.color2 = color2
         self.startAngle = startAngle
         self.endAngle = endAngle
         
@@ -95,7 +101,7 @@ open class PieSliceLayer: CALayer, CAAnimationDelegate {
         f()
         disableAnimation = false
     }
-
+    
     func presentStartAngle(angle: CGFloat, animated: Bool) {
         let f = {self.startAngleManaged = angle}
         if animated {
@@ -140,7 +146,8 @@ open class PieSliceLayer: CALayer, CAAnimationDelegate {
     override init(layer: Any) {
         if let pieSlice = layer as? PieSliceLayer {
             
-            color = pieSlice.color
+            color1 = pieSlice.color1
+            color2 = pieSlice.color2
             innerRadius = pieSlice.innerRadius
             outerRadius = pieSlice.outerRadius
             
@@ -157,6 +164,7 @@ open class PieSliceLayer: CALayer, CAAnimationDelegate {
         if let pieSlice = layer as? PieSliceLayer {
             startAngleManaged = pieSlice.startAngleManaged
             endAngleManaged = pieSlice.endAngleManaged
+            
         }
     }
     
@@ -204,12 +212,19 @@ open class PieSliceLayer: CALayer, CAAnimationDelegate {
     open override func draw(in ctx: CGContext) {
         ctx.beginPath()
         ctx.move(to: CGPoint(x: center.x, y: center.y))
-
+        
         let path = createArcPath(center: center)
         ctx.addPath(path)
+        ctx.clip()
         self.path = path
         
-        ctx.setFillColor(color.cgColor)
+        let colors = [color1.cgColor, color2.cgColor] as CFArray
+        let colorLocations: [CGFloat] = [0.0,1.0]
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let gradient = CGGradient(colorsSpace: colorSpace, colors: colors , locations: colorLocations)
+        
+        //        ctx.setFillColor(color.cgColor)
+        ctx.drawLinearGradient(gradient!, start: CGPoint(x:path.boundingBox.minX, y: path.boundingBox.minY), end: CGPoint(x:path.boundingBox.maxX, y: path.boundingBox.maxY), options: [])
         ctx.setStrokeColor(strokeColor.cgColor)
         ctx.setLineWidth(strokeWidth)
         
@@ -273,12 +288,13 @@ open class PieSliceLayer: CALayer, CAAnimationDelegate {
         let smallestStartAngleDistance = min(abs(center.x - self.center.x - startAngleIntersection1), abs(center.x - self.center.x - startAngleIntersection2))
         let smallestEndAngleDistance = min(abs(center.x - self.center.x - endAngleIntersection1), abs(center.x - self.center.x - endAngleIntersection2))
         
+        
         return min(smallestStartAngleDistance, smallestEndAngleDistance) * 2
     }
     
     
     open override var debugDescription: String {
-        return "{data: \(String(describing: sliceData)), start: \(startAngle.radiansToDegrees), end: \(endAngle.radiansToDegrees)}"
+        return "{data: \(sliceData), start: \(startAngle.radiansToDegrees), end: \(endAngle.radiansToDegrees)}"
     }
-  
+    
 }

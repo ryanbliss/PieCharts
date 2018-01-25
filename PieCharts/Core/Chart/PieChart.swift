@@ -51,12 +51,12 @@ import UIKit
     var animated: Bool {
         return animDuration > 0
     }
-
+    
     // MARK: -
     
     public fileprivate(set) var container: CALayer = CALayer()
     
-    public fileprivate(set) var slices: [PieSlice] = []
+    fileprivate var slices: [PieSlice] = []
     
     public var models: [PieSliceModel] = [] {
         didSet {
@@ -116,7 +116,14 @@ import UIKit
         let newEndAngle = lastEndAngle + CGFloat(angle)
         
         let data = PieSliceData(model: model, id: index, percentage: percentage)
-        let slice = PieSlice(data: data, view: PieSliceLayer(color: model.color, startAngle: lastEndAngle, endAngle: newEndAngle, animDelay: 0, center: bounds.center))
+        let layer = PieSliceLayer(color1: model.color1, color2: model.color2, startAngle: lastEndAngle, endAngle: newEndAngle, animDelay: 0, center: bounds.center)
+        
+        let gradient = CAGradientLayer()
+        
+        gradient.frame = layer.frame
+        gradient.colors = [UIColor.white.cgColor, UIColor.black.cgColor]
+        
+        let slice = PieSlice(data: data, view: layer)
         
         slice.view.frame = bounds
         
@@ -131,9 +138,8 @@ import UIKit
         slice.view.referenceAngle = referenceAngle.degreesToRadians
         
         slice.view.sliceDelegate = self
-
-        self.delegate?.onGenerateSlice(slice: slice)
-
+        
+        
         return (newEndAngle, slice)
     }
     
@@ -191,7 +197,7 @@ import UIKit
         
         models.insert(model, at: index)
         slices.insert(slice, at: index)
-
+        
         for (index, slice) in slices.enumerated() {
             slice.data.id = index
         }
@@ -222,22 +228,13 @@ import UIKit
         slices = []
     }
     
-    public func clear() {
-        for layer in layers {
-            layer.clear()
-        }
-        layers = []
-        models = []
-        removeSlices()
-    }
-    
     open override func prepareForInterfaceBuilder() {
         animDuration = 0
         strokeWidth = 1
         strokeColor = UIColor.lightGray
         
         let models = (0..<6).map {_ in
-            PieSliceModel(value: 2, color: UIColor.clear)
+            PieSliceModel(value: 2, color1: UIColor.clear, color2: UIColor.clear)
         }
         
         self.models = models
